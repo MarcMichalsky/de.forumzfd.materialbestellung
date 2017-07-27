@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/fzfdmaterial/page/material</path>
+    <page_callback>CRM_Materialbestellung_Page_Material</page_callback>
+    <title>Material</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

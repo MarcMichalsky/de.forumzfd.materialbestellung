@@ -37,11 +37,6 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'required' => true
         ) ,
-        'name' => array(
-          'name' => 'name',
-          'type' => CRM_Utils_Type::T_STRING,
-          'required' => true,
-        ),
         'title' => array(
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
@@ -102,7 +97,6 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
     if (!(self::$_fieldKeys)) {
       self::$_fieldKeys = array(
         'id' => 'id',
-        'name' => 'name',
         'title' => 'title',
         'description' => 'description',
         'is_active' => 'is_active',

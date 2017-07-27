@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS `forumzfd_material` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   `description` text,
   `is_active` tinyint(3) unsigned DEFAULT NULL,

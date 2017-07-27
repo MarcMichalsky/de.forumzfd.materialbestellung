@@ -1,0 +1,58 @@
+{
+  "fzfd_material_category": {
+    "name": "fzfd_material_category",
+    "title": "ForumZFD Material Kategorie",
+    "is_active": 1,
+    "is_reserved": 1,
+    "option_values": {
+      "fzfd_postions_papier": {
+        "name": "fzfd_postions_papier",
+        "value": 1,
+        "label": "Positionspapier/Stellungnahme",
+        "is_active": 1
+      },
+      "fzfd_buch_broschure": {
+        "name": "fzfd_buch_broschure",
+        "value": 2,
+        "label": "Bücher und Broschüre",
+        "is_active": 1
+      },
+      "fzfd_magazin": {
+        "name": "fzfd_magazin",
+        "value": 3,
+        "label": "Magazin",
+        "is_active": 1
+      },
+      "fzfd_bildungs_material": {
+        "name": "fzfd_bildungs_material",
+        "value": 4,
+        "label": "Bildungsmaterialien",
+        "is_active": 1
+      },
+      "fzfd_aktions_material": {
+        "name": "fzfd_aktions_material",
+        "value": 5,
+        "label": "Aktionsmaterialien",
+        "is_active": 1
+      },
+      "fzfd_flyer_faltblatter": {
+        "name": "fzfd_flyer_faltblatter",
+        "value": 6,
+        "label": "Flyer/Faltblätter",
+        "is_active": 1
+      },
+      "fzfd_film": {
+        "name": "fzfd_film",
+        "value": 7,
+        "label": "Film",
+        "is_active": 1
+      },
+      "fzfd_besonderes": {
+        "name": "fzfd_besonderes",
+        "value": 8,
+        "label": "Besonderes",
+        "is_active": 1
+      }
+    }
+  }
+}

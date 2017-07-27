@@ -1,0 +1,9 @@
+{
+  "fzfd_material_bestellung":{
+    "name": "fzfd_material_bestellung",
+    "label": "Material Bestellung",
+    "description":"ForumZFD Material Bestellung ",
+    "is_active": 1,
+    "is_reserved": 1
+  }
+}

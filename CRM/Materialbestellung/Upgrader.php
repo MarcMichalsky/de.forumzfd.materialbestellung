@@ -12,32 +12,24 @@ class CRM_Materialbestellung_Upgrader extends CRM_Materialbestellung_Upgrader_Ba
    * Execute once extension is installed
    */
   public function install() {
-    $this->executeSqlFile('sql/createProductTable.sql');
+    $this->executeSqlFile('sql/createMaterialTable.sql');
   }
 
   /**
-   * Example: Work with entities usually not available during the install step.
-   *
-   * This method can be used for any post-install tasks. For example, if a step
-   * of your installation depends on accessing an entity that is itself
-   * created during the installation (e.g., a setting or a managed entity), do
-   * so here to avoid order of operation problems.
-   *
+   * Create activity type and option group if not exists
+   */
   public function postInstall() {
-    $customFieldId = civicrm_api3('CustomField', 'getvalue', array(
-      'return' => array("id"),
-      'name' => "customFieldCreatedViaManagedHook",
-    ));
-    civicrm_api3('Setting', 'create', array(
-      'myWeirdFieldSetting' => array('id' => $customFieldId, 'weirdness' => 1),
-    ));
+    CRM_Materialbestellung_Utils::createActivityTypesFromJson();
+    CRM_Materialbestellung_Utils::createOptionGroupsFromJson();
   }
 
   /**
-   * Example: Run an external SQL script when the module is uninstalled.
+   * Disable activity type and option groups on uninstall.
+   * Decided not to remove data so activity types and option groups can not be removed either.
    *
+   */
   public function uninstall() {
-   $this->executeSqlFile('sql/myuninstall.sql');
+
   }
 
   /**
