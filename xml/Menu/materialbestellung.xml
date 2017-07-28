@@ -6,4 +6,10 @@
     <title>Material</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/fzfdmaterial/form/material</path>
+    <page_callback>CRM_Materialbestellung_Form_Material</page_callback>
+    <title>Material</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

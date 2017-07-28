@@ -44,6 +44,82 @@ class CRM_Materialbestellung_Utils {
     foreach ($activityTypes as $name => $activityTypeParams) {
       if (!self::activityTypeExists($activityTypeParams['name'])) {
         self::createActivityType($activityTypeParams);
+      } else {
+        // make sure they are active!
+        $activityTypeOptionGroupId = civicrm_api3('OptionGroup', 'getvalue', array(
+          'name' => 'activity_type',
+          'return' => 'id',
+        ));
+        try {
+          if ($activityTypeOptionGroupId) {
+            $query = "UPDATE civicrm_option_value SET is_active = %1 WHERE option_group_id = %2 AND NAME = %3";
+            CRM_Core_DAO::executeQuery($query, array(
+              1 => array(1, 'Integer',),
+              2 => array($activityTypeOptionGroupId, 'Integer'),
+              3 => array($name, 'String'),
+            ));
+          }
+        } catch (Exception $ex) {
+        }
+      }
+    }
+  }
+
+  /**
+   * Function to disable the activity types from a json file
+   *
+   * @throws Exception
+   */
+  public static function disableActivityTypesFromJson() {
+    $resourcesPath = self::getResourcesPath();
+    $jsonFile = $resourcesPath.'activity_types.json';
+    if (file_exists($jsonFile)) {
+      $activityTypesJson = file_get_contents($jsonFile);
+      $activityTypes = json_decode($activityTypesJson, true);
+      foreach ($activityTypes as $name => $activityTypeParams) {
+        if (self::activityTypeExists($name)) {
+          $activityTypeOptionGroupId = civicrm_api3('OptionGroup', 'getvalue', array(
+            'name' => 'activity_type',
+            'return' => 'id',
+          ));
+          try {
+            if ($activityTypeOptionGroupId) {
+              $query = "UPDATE civicrm_option_value SET is_active = %1 WHERE option_group_id = %2 AND NAME = %3";
+              CRM_Core_DAO::executeQuery($query, array(
+                1 => array(0, 'Integer',),
+                2 => array($activityTypeOptionGroupId, 'Integer'),
+                3 => array($name, 'String'),
+              ));
+            }
+          } catch (Exception $ex) {
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Function to disable the option groups from a json file
+   *
+   * @throws Exception
+   */
+  public static function disableOptionGroupsFromJson() {
+    $resourcesPath = self::getResourcesPath();
+    $jsonFile = $resourcesPath.'option_groups.json';
+    if (file_exists($jsonFile)) {
+      $optionGroupsJson = file_get_contents($jsonFile);
+      $optionGroups = json_decode($optionGroupsJson, true);
+      foreach ($optionGroups as $name => $optionGroupParams) {
+        if (self::activityTypeExists($name)) {
+          try {
+            $query = "UPDATE civicrm_option_group SET is_active = %1 WHERE name = %2";
+            CRM_Core_DAO::executeQuery($query, array(
+              1 => array(0, 'Integer',),
+              2 => array($name, 'String'),
+            ));
+          } catch (Exception $ex) {
+          }
+        }
       }
     }
   }
@@ -65,6 +141,17 @@ class CRM_Materialbestellung_Utils {
     foreach ($optionGroups as $name => $optionGroupParams) {
       if (!self::optionGroupExists($optionGroupParams['name'])) {
         self::createOptionGroup($optionGroupParams);
+      } else {
+        // make sure they are active!
+        try {
+          $query = "UPDATE civicrm_option_group SET is_active = %1 WHERE name = %2";
+          CRM_Core_DAO::executeQuery($query, array(
+            1 => array(1, 'Integer',),
+            2 => array($name, 'String'),
+          ));
+        } catch (Exception $ex) {
+        }
+
       }
     }
   }
@@ -196,6 +283,54 @@ class CRM_Materialbestellung_Utils {
       }
     }
     catch (CiviCRM_API3_Exception $ex) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Function to get the material category with the id
+   *
+   * @param $materialCategoryId
+   * @return array|bool
+   */
+  public static function getMaterialCategoryWithId($materialCategoryId) {
+    if (!empty($materialCategoryId)) {
+      try {
+        return civicrm_api3('OptionValue', 'getvalue', array(
+          'option_group_id' => 'fzfd_material_category',
+          'is_active' => 1,
+          'value' => $materialCategoryId,
+          'return' => 'label'
+        ));
+      }
+      catch (CiviCRM_API3_Exception $ex) {
+        return FALSE;
+      }
+    } else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Function to get the language with the id
+   *
+   * @param $languageId
+   * @return array|bool
+   */
+  public static function getLanguageWithId($languageId) {
+    if (!empty($languageId)) {
+      try {
+        return civicrm_api3('OptionValue', 'getvalue', array(
+          'option_group_id' => 'languages',
+          'is_active' => 1,
+          'name' => $languageId,
+          'return' => 'label'
+        ));
+      }
+      catch (CiviCRM_API3_Exception $ex) {
+        return FALSE;
+      }
+    } else {
       return FALSE;
     }
   }

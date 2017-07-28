@@ -29,7 +29,8 @@ class CRM_Materialbestellung_Upgrader extends CRM_Materialbestellung_Upgrader_Ba
    *
    */
   public function uninstall() {
-
+    CRM_Materialbestellung_Utils::disableActivityTypesFromJson();
+    CRM_Materialbestellung_Utils::disableOptionGroupsFromJson();
   }
 
   /**
