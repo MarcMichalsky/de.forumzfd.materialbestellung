@@ -1,99 +1,105 @@
 <?php
 /**
- * Page Material to list all materials
+ * Basic Page Material to list all materials
  *
  * @author Erik Hommel <hommel@ee-atwork.nl>
  * @date 27 July 2017
  * @license AGPL-3.0
  */
 
-class CRM_Materialbestellung_Page_Material extends CRM_Core_Page {
+class CRM_Materialbestellung_Page_Material extends CRM_Core_Page_Basic {
 
-  public function run() {
-    $this->setPageConfiguration();
-    $this->initializePager();
-    $materialRows = $this->getMaterial();
-    $this->assign('materialRows', $materialRows);
-    parent::run();
+  public $useLivePageJS = TRUE;
+
+  /**
+   * The action links that we need to display for the browse screen.
+   *
+   * @var array
+   */
+  static $_links = NULL;
+
+  /**
+   * Get BAO Name.
+   *
+   * @return string
+   *   Classname of BAO.
+   */
+  public function getBAOName() {
+    return 'CRM_Materialbestellung_BAO_Material';
   }
 
   /**
-   * Method to get the material data
+   * Get action Links.
    *
    * @return array
+   *   (reference) of action links
    */
-  private function getMaterial() {
-    $materialRows = array();
-    try {
-      $material = civicrm_api3('FzfdMaterial', 'get', array());
-      if (isset($material['values'])) {
-        foreach ($material['values'] as $materialId => $materialData) {
-          $materialRow = $materialData;
-          if (isset($materialRow['material_category_id'])) {
-            $materialRow['material_category'] = CRM_Materialbestellung_Utils::getMaterialCategoryWithId($materialRow['material_category_id']);
-          }
-          if (isset($materialRow['language_id'])) {
-            $materialRow['language'] = CRM_Materialbestellung_Utils::getLanguageWithId($materialRow['language_id']);
-          }
-          $materialRow['actions'] = $this->getRowActions($materialId);
-          $materialRows[$materialId] = $materialRow;
-        }
-        return $materialRows;
-      } else {
-        return $materialRows;
-      }
+  public function &links() {
+    if (!(self::$_links)) {
+      self::$_links = array(
+        CRM_Core_Action::VIEW => array(
+          'name' => ts('View'),
+          'url' => 'civicrm/fzfdmaterial/form/material',
+          'qs' => 'action=view&id=%%id%%&reset=1',
+          'title' => ts('View ').'Material',
+        ),
+        CRM_Core_Action::UPDATE => array(
+          'name' => ts('Edit'),
+          'url' => 'civicrm/fzfdmaterial/form/material',
+          'qs' => 'action=update&id=%%id%%&reset=1',
+          'title' => ts('Edit ').'Material',
+        ),
+        CRM_Core_Action::DISABLE => array(
+          'name' => ts('Disable'),
+          'ref' => 'crm-enable-disable',
+          'title' => ts('Disable ').' Material',
+        ),
+        CRM_Core_Action::ENABLE => array(
+          'name' => ts('Enable'),
+          'ref' => 'crm-enable-disable',
+          'title' => ts('Enable ').' Material',
+        ),
+        CRM_Core_Action::DELETE => array(
+          'name' => ts('Delete'),
+          'url' => 'civicrm/fzfdmaterial/form/material',
+          'qs' => 'action=delete&id=%%id%%',
+          'title' => ts('Delete ').' Material',
+        ),
+      );
     }
-    catch (CiviCRM_API3_Exception $ex) {
-      return $materialRows;
-    }
+    return self::$_links;
   }
 
   /**
-   * Method to get the page actions and the related url
+   * Get name of edit form.
    *
-   * @param $materialId
-   * @return array
+   * @return string
+   *   Classname of edit form.
    */
-  private function getRowActions($materialId) {
-    $actions = array();
-    $viewUrl = CRM_Utils_System::url('civicrm/fzfdmaterial/form/material', 'action=view&id='.$materialId, true);
-    $editUrl = CRM_Utils_System::url('civicrm/fzfdmaterial/form/material', 'action=edit&id='.$materialId, true);
-    $deleteUrl = CRM_Utils_System::url('civicrm/fzfdmaterial/form/material', 'action=delete&id='.$materialId, true);
-    $actions[] = '<a class="action-item" title="'.ts("View").' Material" href="'.$viewUrl.'">'.ts("View").'</a>';
-    $actions[] = '<a class="action-item" title="'.ts("Edit").' Material" href="'.$editUrl.'">'.ts("Edit").'</a>';
-    $actions[] = '<a class="action-item" title="'.ts("Delete").' Material" href="'.$deleteUrl.'">'.ts("Delete").'</a>';
-    return $actions;
+  public function editForm() {
+    return 'CRM_Materialbestellung_Form_Material';
   }
 
   /**
-   * Method to set the page configuration
+   * Get edit form name.
    *
-   * @access protected
+   * @return string
+   *   name of this page.
    */
-  protected function setPageConfiguration() {
-    CRM_Utils_System::setTitle(ts("ForumZFD Material"));
-    $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1', true));
-    $this->assign('addUrl', CRM_Utils_System::url('civicrm/fzfdmaterial/form/material', 'action=add&reset=1', true));
-
+  public function editName() {
+    return 'ForumZFD Material';
   }
 
   /**
-   * Method to initialize pager
+   * Get user context.
    *
-   * @access protected
+   * @param null $mode
+   *
+   * @return string
+   *   user context.
    */
-  protected function initializePager() {
-    $params           = array(
-      'total' => CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM forumzfd_material"),
-      'rowCount' => CRM_Utils_Pager::ROWCOUNT,
-      'status' => ts('ForumZFD Material %%StatusMessage%%'),
-      'buttonBottom' => 'PagerBottomButton',
-      'buttonTop' => 'PagerTopButton',
-      'pageID' => $this->get(CRM_Utils_Pager::PAGE_ID),
-    );
-    $this->_pager = new CRM_Utils_Pager($params);
-    $this->assign_by_ref('pager', $this->_pager);
+  public function userContext($mode = NULL) {
+    return 'civicrm/fzfdmaterial/page/material';
   }
 
 }
