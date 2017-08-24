@@ -9,7 +9,68 @@
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function _civicrm_api3_fzfd_material_Order_spec(&$spec) {
-  $spec['magicword']['api.required'] = 1;
+  $spec['material_id'] = array(
+    'name' => 'material_id',
+    'title' => 'material_id',
+    'api.required' => 1,
+    'type' => CRM_Utils_Type::T_INT,
+  );
+  $spec['contact_id'] = array(
+    'name' => 'contact_id',
+    'title' => 'contact_id',
+    'type' => CRM_Utils_Type::T_INT,
+  );
+  $spec['quantity'] = array(
+    'name' => 'quantity',
+    'title' => 'quantity',
+    'api.required' => 1,
+    'type' => CRM_Utils_Type::T_INT,
+  );
+  $spec['prefix_id'] = array(
+    'name' => 'prefix_id',
+    'title' => 'prefix_id',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['first_name'] = array(
+    'name' => 'first_name',
+    'title' => 'first_name',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['last_name'] = array(
+    'name' => 'last_name',
+    'title' => 'last_name',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['email'] = array(
+    'name' => 'email',
+    'title' => 'email',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['street_address'] = array(
+    'name' => 'street_address',
+    'title' => 'street_address',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['postal_code'] = array(
+    'name' => 'postal_code',
+    'title' => 'postal_code',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['city'] = array(
+    'name' => 'city',
+    'title' => 'city',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['country_id'] = array(
+    'name' => 'country_id',
+    'title' => 'country_id',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
+  $spec['source'] = array(
+    'name' => 'source',
+    'title' => 'source',
+    'type' => CRM_Utils_Type::T_STRING,
+  );
 }
 
 /**
@@ -22,20 +83,5 @@ function _civicrm_api3_fzfd_material_Order_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_fzfd_material_Order($params) {
-  if (array_key_exists('magicword', $params) && $params['magicword'] == 'sesame') {
-    $returnValues = array(
-      // OK, return several data rows
-      12 => array('id' => 12, 'name' => 'Twelve'),
-      34 => array('id' => 34, 'name' => 'Thirty four'),
-      56 => array('id' => 56, 'name' => 'Fifty six'),
-    );
-    // ALTERNATIVE: $returnValues = array(); // OK, success
-    // ALTERNATIVE: $returnValues = array("Some value"); // OK, return a single value
-
-    // Spec: civicrm_api3_create_success($values = 1, $params = array(), $entity = NULL, $action = NULL)
-    return civicrm_api3_create_success($returnValues, $params, 'NewEntity', 'NewAction');
-  }
-  else {
-    throw new API_Exception(/*errorMessage*/ 'Everyone knows that the magicword is "sesame"', /*errorCode*/ 1234);
-  }
+  return civicrm_api3_create_success(CRM_Materialbestellung_BAO_Material::addOrder($params), $params, 'FzfdMaterial', 'Order');
 }

@@ -12,4 +12,10 @@
     <title>Material</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
+  <item>
+    <path>civicrm/materialbestellung/page/processmaterialactions</path>
+    <page_callback>CRM_Materialbestellung_Page_MaterialActions</page_callback>
+    <title>MaterialActions</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
 </menu>

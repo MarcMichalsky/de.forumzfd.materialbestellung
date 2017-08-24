@@ -15,6 +15,7 @@ class CRM_Materialbestellung_Config {
   private $_materialBestellungActivityType = array();
   private $_materialCategoryOptionGroup = array();
   private $_languageOptionGroup = array();
+  private $_scheduledActivityStatusId = NULL;
 
   /**
    * CRM_Materialbestellung_Config constructor.
@@ -48,8 +49,25 @@ class CRM_Materialbestellung_Config {
       throw new Exception(ts('Could not find required activity type for material bestellung in ').__METHOD__
         .ts(', contact your system administrator'));
     }
+    try {
+      $this->_scheduledActivityStatusId = civicrm_api3('OptionValue', 'getvalue', array(
+        'option_group_id' => 'activity_status',
+        'name' => 'Scheduled',
+        'return' => 'value',
+      ));
+    } catch (CiviCRM_API3_Exception $ex) {
+      throw new Exception((ts('Could not find required activity status Scheduled in '.__METHOD__.', contact your system administrator')));
+    }
   }
 
+  /**
+   * Getter for scheduled activity status id
+   *
+   * @return array|null
+   */
+  public function getScheduledActivityStatusId() {
+    return $this->_scheduledActivityStatusId;
+  }
   /**
    * Getter for material bestellung activity type
    *

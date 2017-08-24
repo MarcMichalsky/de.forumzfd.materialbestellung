@@ -79,7 +79,7 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
         ),
         'download_link' => array(
           'name' => 'download_link',
-          'type' => CRM_Utils_Type::T_URL,
+          'type' => CRM_Utils_Type::T_STRING,
         ),
 
       );

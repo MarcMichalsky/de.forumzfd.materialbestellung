@@ -23,6 +23,7 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
+{crmScript ext=de.forumzfd.materialbestellung file=resources/material_functions.js}
 
 {if $action eq 1 or $action eq 2 or $action eq 4 or $action eq 8}
   {include file="CRM/Materialbestellung/Form/Material.tpl"}
@@ -59,11 +60,11 @@
             <tr id="material-{$row.id}" class="crm-entity {cycle values="odd-row,even-row"} {$row.class}">
               <td class="crm-material-title" data-field="title">{$row.title}</td>
               <td class="crm-material-price" data-field="price">{$row.price|crmMoney}</td>
-              <td class="crm-material-category" data-field="material_category_id">{$row.category}</td>
+              <td class="crm-material-category" data-field="material_category_id">{$row.material_category_id}</td>
               <td class="crm-material-creation_year" data-field="creation_year">{$row.creation_year}</td>
-              <td class="crm-material-language" data-field="language_id">{$row.language}</td>
+              <td class="crm-material-language" data-field="language_id">{$row.language_id}</td>
               <td class="crm-material-number_of_pages" data-field="number_of_pages">{$row.number_of_pages}</td>
-              {if !empty($material.download_url)}
+              {if !empty($row.download_link)}
                 <td class="crm-material-download_link"><a href="{$row.download_link}">{$row.download_link}</a></td>
               {else}
                 <td class="crm-material-download_link">&nbsp;</td>
@@ -91,3 +92,49 @@
     {crmButton p="civicrm/" q="reset=1" class="cancel" icon="times"}{ts}Done{/ts}{/crmButton}
   </div>
 {/if}
+{literal}
+  <script type="text/javascript">
+    //jQuery to retrieve and show category label and language label
+    cj('.crm-material-category').each(function() {
+      var category = cj(this);
+      CRM.api3('OptionValue', 'getvalue', {
+        "option_group_id": "fzfd_material_category",
+        "value":category.text(),
+        "return":"label"})
+        .done(function(result) {
+          category.html(result.result);
+        });
+      });
+    cj('.crm-material-language').each(function() {
+      var language = cj(this);
+      CRM.api3('OptionValue', 'getvalue', {
+        "option_group_id": "languages",
+        "name":language.text(),
+        "return":"label"})
+      .done(function(result) {
+        language.html(result.result);
+        });
+      });
+    //jQuery to process enable, disable and delete
+    cj('.action-item').each(function () {
+      var itemTitle = cj(this).attr('title');
+      var parentItem = cj(this).parent().parent().parent().parent().parent();
+      var parentId = parentItem.attr('id');
+      switch (itemTitle) {
+        case "Enable Material":
+          var enableFunction = 'enOrDisableMaterial(1, ' + parentId + ')';
+          cj(this).attr('onClick', enableFunction);
+          break;
+        case "Disable Material":
+          cj(this).on("click", enOrDisableMaterial(0, parentId));
+          console.log('on click toegevoegd');
+          break;
+        case "Delete Material":
+          var deleteFunction = 'deleteMaterial(' + parentId + ')';
+          cj(this).attr('onClick', deleteFunction);
+          break;
+      }
+    });
+  </script>
+{/literal}
+

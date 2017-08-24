@@ -46,6 +46,10 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
    * @static
    */
   public static function add($params) {
+    foreach ($params as $sleutel => $waarde) {
+      CRM_Core_Error::debug_log_message('Sleutel is '.$sleutel.' met waarde '.$waarde);
+    }
+    // todo check civirules to see how to save wysisyg for description
     $result = array();
     if (empty($params)) {
       throw new Exception('Params can not be empty when adding or updating a material in '.__METHOD__);
@@ -57,8 +61,13 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
         $material->$key = $value;
       }
     }
+    // always is_active to 1 if add mode (no id)
+    if (!isset($params['id'])) {
+      $material->is_active = 1;
+    }
     $material->save();
-    self::storeValues($material, $result);
+    self::storeValues($material, $row);
+    $result[$row['id']] = $row;
     return $result;
   }
 
@@ -66,15 +75,110 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
    * Method to delete a material by id
    *
    * @param int $materialId
+   * @return array $result
    * @throws Exception when materialId is empty
    */
   public static function deleteWithId($materialId) {
+    // can not be deleted if there are still activities related to this material
+    if (self::hasRelatedActivities($materialId) == TRUE) {
+      throw new Exception('Material can not be deleted because there are still activities that are related to this material.');
+    }
     if (empty($materialId)) {
       throw new Exception('material id can not be empty when attempting to delete a material in '.__METHOD__);
     }
     $material = new CRM_Materialbestellung_BAO_Material();
     $material->id = $materialId;
     $material->delete();
+    $result[$materialId] = array('id' => $materialId);
+    return $result;
   }
 
+  /**
+   * Method to check if material still has activities related to it
+   *
+   * @param $materialId
+   * @return bool
+   */
+  public static function hasRelatedActivities($materialId) {
+    try {
+      $config = CRM_Materialbestellung_Config::singleton();
+      $count = civicrm_api3('Activity', 'getcount', array(
+        'source_record_id' => $materialId,
+        'activity_type_id' => $config->getMaterialBestellungActivityType('value'),
+      ));
+      if ($count > 0) {
+        return TRUE;
+      }
+    }
+    catch (CiviCRM_API3_Exception $ex) {
+    }
+    return FALSE;
+  }
+
+  /**
+   * Method to add an order for the material
+   *
+   * @param $params
+   * @return array
+   * @throws Exception when required parameter is not present or empty
+   */
+  public static function addOrder($params) {
+    $noEmpties = array('material_id', 'quantity',);
+    foreach ($noEmpties as $noEmpty) {
+      if (!isset($params[$noEmpty]) || empty($params[$noEmpty])) {
+        throw new Exception('Parameter '.$noEmpty.' is required and can not be empty');
+      }
+    }
+    // either contact_id or email has to be there!
+    if (!isset($params['contact_id']) && !isset($params['email'])) {
+      if (!isset($params['first_name']) || !isset($params['last_name'])) {
+        throw new Exception('Either contact_id, email or first_name + last_name has to be present');
+      }
+    }
+    // process target contact
+    $forumContact = new CRM_Apiprocessing_Contact();
+    $contactId = $forumContact->processIncomingContact($params);
+
+    $config = CRM_Materialbestellung_Config::singleton();
+    // get material with id, error if not exists
+    try {
+      $material = civicrm_api3('FzfdMaterial', 'getsingle', array('id' => $params['material_id'],));
+    }
+    catch (CiviCRM_API3_Exception $ex) {
+      throw new Exception('Could not find material with id '.$params['material_id'].' in '.__METHOD__);
+    }
+    // create activity for material order
+    $orderParams = array(
+      'activity_type_id' => $config->getMaterialBestellungActivityType('value'),
+      'status_id' => $config->getScheduledActivityStatusId(),
+      'subject' => 'Bestellung für '.$params['quantity'].' Material '.
+        $material['title'].' mit preis '.$material['price'],
+      'target_id' => $contactId,
+      'source_record_id' => $params['material_id'],
+      'details' => CRM_Apiprocessing_Utils::renderTemplate('MaterialBestellungDetails.tpl', $material + $params),
+    );
+    $optionals = array('location', 'campaign_id');
+    foreach ($optionals as $optional) {
+      if (isset($params[$optional]) && !empty($params[$optional])) {
+        $orderParams[$optional] = $params[$optional];
+      }
+    }
+    $activity = self::addOrderActivity($orderParams);
+    return $activity;
+  }
+
+  /**
+   * Method to add material order activity
+   *
+   * @param $orderParams
+   * @return array
+   */
+  private static function addOrderActivity($orderParams) {
+    try {
+      $activity = civicrm_api3('Activity', 'create', $orderParams);
+      return $activity['values'];
+    } catch (CiviCRM_API3_Exception $ex) {
+      return array();
+    }
+  }
 }

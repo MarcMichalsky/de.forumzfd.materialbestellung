@@ -1,14 +1,14 @@
 <?php
 
 /**
- * FzfdMaterial.Get API specification (optional)
+ * FzfdMaterial.Create API specification (optional)
  * This is used for documentation and validation.
  *
  * @param array $spec description of fields supported by this API call
  * @return void
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
-function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
+function _civicrm_api3_fzfd_material_Create_spec(&$spec) {
   $spec['id'] = array(
     'name' => 'id',
     'title' => 'id',
@@ -17,6 +17,7 @@ function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
   $spec['title'] = array(
     'name' => 'title',
     'title' => 'title',
+    'api.required' => 1,
     'type' => CRM_Utils_Type::T_STRING
   );
   $spec['description'] = array(
@@ -32,11 +33,13 @@ function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
   $spec['price'] = array(
     'name' => 'price',
     'title' => 'price',
+    'api.required' => 1,
     'type' => CRM_Utils_Type::T_MONEY,
   );
   $spec['material_category_id'] = array(
     'name' => 'material_category_id',
     'title' => 'material_category_id',
+    'api.required' => 1,
     'type' => CRM_Utils_Type::T_STRING,
   );
   $spec['short_description'] = array(
@@ -57,6 +60,7 @@ function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
   $spec['language_id'] = array(
     'name' => 'language_id',
     'title' => 'language_id',
+    'api.required' => 1,
     'type' => CRM_Utils_Type::T_STRING,
   );
   $spec['number_of_pages'] = array(
@@ -69,11 +73,10 @@ function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
     'title' => 'download_link',
     'type' => CRM_Utils_Type::T_URL,
   );
-
 }
 
 /**
- * FzfdMaterial.Get API
+ * FzfdMaterial.Create API
  *
  * @param array $params
  * @return array API result descriptor
@@ -81,6 +84,6 @@ function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
  * @see civicrm_api3_create_error
  * @throws API_Exception
  */
-function civicrm_api3_fzfd_material_Get($params) {
-  return civicrm_api3_create_success(CRM_Materialbestellung_BAO_Material::getValues($params), $params, 'FzfdMaterial', 'Get');
+function civicrm_api3_fzfd_material_Create($params) {
+  return civicrm_api3_create_success(CRM_Materialbestellung_BAO_Material::add($params), $params, 'FzfdMaterial', 'Create');
 }
