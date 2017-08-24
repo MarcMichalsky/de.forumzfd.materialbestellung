@@ -23,8 +23,6 @@
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 *}
-{crmScript ext=de.forumzfd.materialbestellung file=resources/material_functions.js}
-
 {if $action eq 1 or $action eq 2 or $action eq 4 or $action eq 8}
   {include file="CRM/Materialbestellung/Form/Material.tpl"}
 {else}
