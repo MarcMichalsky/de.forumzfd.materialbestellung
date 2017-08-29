@@ -155,7 +155,7 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
         $material['title'].' mit preis '.$material['price'],
       'target_id' => $contactId,
       'source_record_id' => $params['material_id'],
-      'details' => CRM_Apiprocessing_Utils::renderTemplate('MaterialBestellungDetails.tpl', $material + $params),
+      'details' => CRM_Apiprocessing_Utils::renderTemplate('CRM/Materialbestellung/MaterialBestellungDetails.tpl', $params),
     );
     $optionals = array('location', 'campaign_id');
     foreach ($optionals as $optional) {

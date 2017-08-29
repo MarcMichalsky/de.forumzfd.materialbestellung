@@ -61,9 +61,9 @@ function _civicrm_api3_fzfd_material_Order_spec(&$spec) {
     'title' => 'city',
     'type' => CRM_Utils_Type::T_STRING,
   );
-  $spec['country_id'] = array(
-    'name' => 'country_id',
-    'title' => 'country_id',
+  $spec['country_iso_code'] = array(
+    'name' => 'country_iso_code',
+    'title' => 'country_iso_code',
     'type' => CRM_Utils_Type::T_STRING,
   );
   $spec['source'] = array(
