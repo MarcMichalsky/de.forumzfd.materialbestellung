@@ -46,9 +46,6 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
    * @static
    */
   public static function add($params) {
-    foreach ($params as $sleutel => $waarde) {
-      CRM_Core_Error::debug_log_message('Sleutel is '.$sleutel.' met waarde '.$waarde);
-    }
     // todo check civirules to see how to save wysisyg for description
     $result = array();
     if (empty($params)) {
