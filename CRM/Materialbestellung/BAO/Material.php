@@ -134,7 +134,9 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
     }
     // process target contact
     $forumContact = new CRM_Apiprocessing_Contact();
-    $contactId = $forumContact->processIncomingContact($params);
+    // put address data in array
+    self::prepareAddressParams($params);
+    $individualId = $forumContact->processIncomingIndividual($params);
 
     $config = CRM_Materialbestellung_Config::singleton();
     // get material with id, error if not exists
@@ -150,7 +152,7 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
       'status_id' => $config->getScheduledActivityStatusId(),
       'subject' => 'Bestellung für '.$params['quantity'].' Material '.
         $material['title'].' mit preis '.$material['price'],
-      'target_id' => $contactId,
+      'target_id' => $individualId,
       'source_record_id' => $params['material_id'],
       'details' => CRM_Apiprocessing_Utils::renderTemplate('CRM/Materialbestellung/MaterialBestellungDetails.tpl', $params),
     );
@@ -162,6 +164,31 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
     }
     $activity = self::addOrderActivity($orderParams);
     return $activity;
+  }
+
+  /**
+   * Method to prepare the address params
+   *
+   * @param $params
+   * @return array
+   */
+  private static function prepareAddressParams(&$params) {
+    $addressParams = array();
+    if (isset($params['street_address']) && !empty($params['street_address'])) {
+      $addressParams['street_address'] = $params['street_address'];
+    }
+    if (isset($params['city']) && !empty($params['city'])) {
+      $addressParams['city'] = $params['city'];
+    }
+    if (isset($params['postal_code']) && !empty($params['postal_code'])) {
+      $addressParams['postal_code'] = $params['postal_code'];
+    }
+    if (isset($params['country_iso']) && !empty($params['country_iso'])) {
+      $addressParams['country_iso'] = $params['country_iso'];
+    }
+    if (!empty($addressParams)) {
+      $params['individual_addresses'][] = $addressParams;
+    }
   }
 
   /**
