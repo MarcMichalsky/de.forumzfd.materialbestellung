@@ -143,6 +143,11 @@ function materialbestellung_civicrm_alterSettingsFolders(&$metaDataFolders = NUL
   _materialbestellung_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
+/**
+ * Function to check if the required extensions are installed
+ *
+ * @throws Exception
+ */
 function _materialbestellung_required_extensions_installed() {
   $required = array(
     'de.forumzfd.apiprocessing' => FALSE,
@@ -162,6 +167,7 @@ function _materialbestellung_required_extensions_installed() {
     }
   }
 }
+
 // --- Functions below this ship commented out. Uncomment as required. ---
 
 /**
