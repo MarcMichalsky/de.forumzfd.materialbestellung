@@ -83,5 +83,21 @@ function _civicrm_api3_fzfd_material_Order_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_fzfd_material_Order($params) {
-  return civicrm_api3_create_success(CRM_Materialbestellung_BAO_Material::addOrder($params), $params, 'FzfdMaterial', 'Order');
+  $activity = CRM_Materialbestellung_BAO_Material::addOrder($params);
+  $returnValues = array();
+  if ($activity) {
+    $returnValues = array(
+      'is_error' => '0',
+      'version' => '3',
+      'count' => '1',
+    );
+  }
+  // return doi_id and doi_token if in params
+  if (isset($params['doi_id'])) {
+    $returnValues['doi_id'] = $params['doi_id'];
+  }
+  if (isset($params['doi_token'])) {
+    $returnValues['doi_token'] = $params['doi_token'];
+  }
+  return $returnValues;
 }
