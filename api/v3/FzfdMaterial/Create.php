@@ -42,15 +42,10 @@ function _civicrm_api3_fzfd_material_Create_spec(&$spec) {
     'api.required' => 1,
     'type' => CRM_Utils_Type::T_STRING,
   );
-  $spec['short_description'] = array(
-    'name' => 'short_description',
-    'title' => 'short_description',
-    'type' => CRM_Utils_Type::T_STRING,
-  );
-  $spec['subtitle'] = array(
-    'name' => 'subtitle',
-    'title' => 'subtitle',
-    'type' => CRM_Utils_Type::T_STRING,
+  $spec['can_be_ordered'] = array(
+    'name' => 'can_be_ordered',
+    'title' => 'can_be_ordered',
+    'type' => CRM_Utils_Type::T_INT,
   );
   $spec['creation_year'] = array(
     'name' => 'creation_year',

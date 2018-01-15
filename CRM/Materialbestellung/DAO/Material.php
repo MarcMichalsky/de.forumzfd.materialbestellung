@@ -57,13 +57,9 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
           'name' => 'material_category_id',
           'type' => CRM_Utils_Type::T_STRING,
         ),
-        'short_description' => array(
-          'name' => 'short_description',
-          'type' => CRM_Utils_Type::T_STRING,
-        ),
-        'subtitle' => array(
-          'name' => 'subtitle',
-          'type' => CRM_Utils_Type::T_STRING,
+        'can_be_ordered' => array(
+          'name' => 'can_be_ordered',
+          'type' => CRM_Utils_Type::T_INT,
         ),
         'creation_year' => array(
           'name' => 'creation_year',
@@ -102,8 +98,7 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
         'is_active' => 'is_active',
         'price' => 'price',
         'material_category_id' => 'material_category_id',
-        'short_description' => 'short_description',
-        'subtitle' => 'subtitle',
+        'can_be_ordered' => 'can_be_ordered',
         'creation_year' => 'creation_year',
         'language_id' => 'language_id',
         'number_of_pages' => 'number_of_pages',

@@ -46,7 +46,6 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
    * @static
    */
   public static function add($params) {
-    // todo check civirules to see how to save wysisyg for description
     $result = array();
     if (empty($params)) {
       throw new Exception('Params can not be empty when adding or updating a material in '.__METHOD__);
@@ -113,17 +112,17 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
   }
 
   /**
-   * Method to add an order for the material
+   * Method to check if params are valid
    *
    * @param $params
-   * @return array
-   * @throws Exception when required parameter is not present or empty
+   * @throws Exception
+   * @return bool
    */
-  public static function addOrder($params) {
+  private static function validParams($params) {
     $noEmpties = array('material_id', 'quantity',);
     foreach ($noEmpties as $noEmpty) {
       if (!isset($params[$noEmpty]) || empty($params[$noEmpty])) {
-        throw new Exception('Parameter '.$noEmpty.' is required and can not be empty');
+        throw new Exception('Parameter ' . $noEmpty . ' is required and can not be empty');
       }
     }
     // either contact_id or email has to be there!
@@ -132,45 +131,90 @@ class CRM_Materialbestellung_BAO_Material extends CRM_Materialbestellung_DAO_Mat
         throw new Exception('Either contact_id, email or first_name + last_name has to be present');
       }
     }
-    // process target contact
-    $forumContact = new CRM_Apiprocessing_Contact();
-    // put address data in array
-    self::prepareAddressParams($params);
-    $individualId = $forumContact->processIncomingIndividual($params);
+    // return error if material can not be ordered
+    if (self::canBeOrdered($params['material_id']) == FALSE) {
+      throw new Exception('Material can not be ordered at the moment');
+    }
+    return TRUE;
+  }
 
-    $config = CRM_Materialbestellung_Config::singleton();
-    // get material with id, error if not exists
+  /**
+   * Method to check if material can be ordered
+   *
+   * @param $materialId
+   * @throws
+   * @return bool
+   */
+  private static function canBeOrdered($materialId) {
     try {
-      $material = civicrm_api3('FzfdMaterial', 'getsingle', array('id' => $params['material_id'],));
-    }
-    catch (CiviCRM_API3_Exception $ex) {
-      throw new Exception('Could not find material with id '.$params['material_id'].' in '.__METHOD__);
-    }
-    // create activity for material order
-    $orderParams = array(
-      'activity_type_id' => $config->getMaterialBestellungActivityType('value'),
-      'status_id' => $config->getScheduledActivityStatusId(),
-      'subject' => 'Bestellung für '.$params['quantity'].' Material '.
-        $material['title'].' mit preis '.$material['price'],
-      'target_id' => $individualId,
-      'source_record_id' => $params['material_id'],
-      'details' => CRM_Apiprocessing_Utils::renderTemplate('CRM/Materialbestellung/MaterialBestellungDetails.tpl', $params),
-    );
-    $optionals = array('location', 'campaign_id');
-    foreach ($optionals as $optional) {
-      if (isset($params[$optional]) && !empty($params[$optional])) {
-        $orderParams[$optional] = $params[$optional];
+      $canBeOrdered = civicrm_api3('FzfdMaterial', 'getvalue', array(
+        'id' => $materialId,
+        'return' => 'can_be_ordered',
+      ));
+      if ($canBeOrdered == TRUE) {
+        return TRUE;
+      } else {
+        return FALSE;
       }
     }
-    $activity = self::addOrderActivity($orderParams);
-    return $activity;
+    catch (CiviCRM_API3_Exception $ex) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Method to add an order for the material
+   *
+   * @param $params
+   * @return array
+   * @throws Exception when required parameter is not present or empty
+   */
+  public static function addOrder($params) {
+    if (self::validParams($params) == TRUE) {
+      // process target contact
+      $forumContact = new CRM_Apiprocessing_Contact();
+      // put address data in array
+      self::prepareAddressParams($params);
+      $individualId = $forumContact->processIncomingIndividual($params);
+
+      $config = CRM_Materialbestellung_Config::singleton();
+      // get material with id, error if not exists
+      try {
+        $material = civicrm_api3('FzfdMaterial', 'getsingle', array('id' => $params['material_id'],));
+      } catch (CiviCRM_API3_Exception $ex) {
+        throw new Exception('Could not find material with id ' . $params['material_id'] . ' in ' . __METHOD__);
+      }
+      // create activity for material order
+      $orderParams = array(
+        'activity_type_id' => $config->getMaterialBestellungActivityType('value'),
+        'status_id' => $config->getScheduledActivityStatusId(),
+        'subject' => 'Bestellung für ' . $params['quantity'] . ' Material ' .
+          $material['title'] . ' mit preis ' . $material['price'],
+        'target_id' => $individualId,
+        'source_record_id' => $params['material_id'],
+        'details' => CRM_Apiprocessing_Utils::renderTemplate('CRM/Materialbestellung/MaterialBestellungDetails.tpl', $params),
+      );
+      $optionals = array('location', 'campaign_id');
+      foreach ($optionals as $optional) {
+        if (isset($params[$optional]) && !empty($params[$optional])) {
+          $orderParams[$optional] = $params[$optional];
+        }
+      }
+      $activity = self::addOrderActivity($orderParams);
+      return $activity;
+    }
+    return array(
+      'is_error' => '1',
+      'version' => '3',
+      'count' => '0',
+      'error_message' => ts('Unknown error in de.forumzfde.materialbestellung '.__METHOD__),
+    );
   }
 
   /**
    * Method to prepare the address params
    *
    * @param $params
-   * @return array
    */
   private static function prepareAddressParams(&$params) {
     $addressParams = array();

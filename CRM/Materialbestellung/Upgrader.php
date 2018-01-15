@@ -34,6 +34,28 @@ class CRM_Materialbestellung_Upgrader extends CRM_Materialbestellung_Upgrader_Ba
   }
 
   /**
+   * Upgrade to add column can_be_ordered and remove subtitle and short_description
+   */
+  public function upgrade_1010() {
+    // add column can_be_ordered if required
+    $tableName = 'forumzfd_material';
+    if (!CRM_Core_DAO::checkFieldExists($tableName, 'can_be_ordered')) {
+      $addQuery = 'ALTER TABLE '.$tableName.' ADD can_be_ordered TINYINT(3) UNSIGNED DEFAULT 0';
+      CRM_Core_DAO::executeQuery($addQuery);
+    }
+    // remove subtitle and short_description
+    if (CRM_Core_DAO::checkFieldExists($tableName, 'subtitle')) {
+      $removeQuery = 'ALTER TABLE '.$tableName.' DROP COLUMN subtitle';
+      CRM_Core_DAO::executeQuery($removeQuery);
+    }
+    if (CRM_Core_DAO::checkFieldExists($tableName, 'short_description')) {
+      $removeQuery = 'ALTER TABLE '.$tableName.' DROP COLUMN short_description';
+      CRM_Core_DAO::executeQuery($removeQuery);
+    }
+    return TRUE;
+  }
+
+  /**
    * Example: Run a simple query when a module is enabled.
    *
   public function enable() {
@@ -46,32 +68,6 @@ class CRM_Materialbestellung_Upgrader extends CRM_Materialbestellung_Upgrader_Ba
   public function disable() {
     CRM_Core_DAO::executeQuery('UPDATE foo SET is_active = 0 WHERE bar = "whiz"');
   }
-
-  /**
-   * Example: Run a couple simple queries.
-   *
-   * @return TRUE on success
-   * @throws Exception
-   *
-  public function upgrade_4200() {
-    $this->ctx->log->info('Applying update 4200');
-    CRM_Core_DAO::executeQuery('UPDATE foo SET bar = "whiz"');
-    CRM_Core_DAO::executeQuery('DELETE FROM bang WHERE willy = wonka(2)');
-    return TRUE;
-  } // */
-
-
-  /**
-   * Example: Run an external SQL script.
-   *
-   * @return TRUE on success
-   * @throws Exception
-  public function upgrade_4201() {
-    $this->ctx->log->info('Applying update 4201');
-    // this path is relative to the extension base dir
-    $this->executeSqlFile('sql/upgrade_4201.sql');
-    return TRUE;
-  } // */
 
 
   /**

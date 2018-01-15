@@ -46,9 +46,8 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
       , FALSE);
     $this->addMoney('price', ts('Price'), FALSE, array('readonly' => 'readonly'), FALSE);
     $this->add('text', 'material_category_id', ts('Category'), array('readonly' => 'readonly'));
-    $this->add('text', 'short_description', ts('Short Description'), array('readonly' => 'readonly'), FALSE);
-    $this->add('text', 'subtitle', ts('Subtitle'), array('readonly' => 'readonly'), FALSE);
     $this->add('text', 'creation_year', ts('Creation Year'), array('readonly' => 'readonly'), FALSE);
+    $this->addYesNo('can_be_ordered', ts('Can be ordered?'), FALSE, FALSE, array('readonly' => 'readonly'));
     $this->add('text', 'language_id', ts('Language'), array('readonly' => 'readonly'),FALSE);
     $this->add('text', 'number_of_pages', ts('Number of Pages'), array('readonly' => 'readonly'),FALSE);
     $this->add('text', 'download_link', ts('Download Link'), array('readonly' => 'readonly'), FALSE);
@@ -62,8 +61,7 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
     $this->add('wysiwyg', 'description', ts('Description'), array('rows' => 4, 'cols' => 80), FALSE);
     $this->addMoney('price', ts('Price'), TRUE, array(), FALSE);
     $this->add('select', 'material_category_id', ts('Category'), $this->_materialCategoryList,TRUE);
-    $this->add('text', 'short_description', ts('Short Description'), FALSE);
-    $this->add('text', 'subtitle', ts('Subtitle'), FALSE);
+    $this->addYesNo('can_be_ordered', ts('Can be ordered?'), TRUE, TRUE);
     $this->add('text', 'creation_year', ts('Creation Year'), FALSE);
     $this->add('select', 'language_id', ts('Language'), $this->_languagesList,TRUE);
     $this->add('text', 'number_of_pages', ts('Number of Pages'), FALSE);

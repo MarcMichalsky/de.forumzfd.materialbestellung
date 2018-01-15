@@ -50,6 +50,7 @@
             <th>{ts}Language{/ts}</th>
             <th>{ts}Number of Pages{/ts}</th>
             <th>{ts}Download Link{/ts}</th>
+            <th>{ts}Can be ordered?{/ts}</th>
             <th>{ts}Active?{/ts}</th>
             <th></th>
           </tr>
@@ -66,6 +67,11 @@
                 <td class="crm-material-download_link"><a href="{$row.download_link}">{$row.download_link}</a></td>
               {else}
                 <td class="crm-material-download_link">&nbsp;</td>
+              {/if}
+              {if $row.can_be_ordered eq 1}
+                <td class="crm-material-can_be_ordered">{ts}Yes{/ts}</td>
+              {else}
+                <td class="crm-material-can_not_be_ordered">{ts}No{/ts}</td>
               {/if}
               {if $row.is_active eq 1}
                 <td class="crm-material-is_active">{ts}Yes{/ts}</td>
