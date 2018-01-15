@@ -88,8 +88,8 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
    * @return array
    */
   public function setDefaultValues() {
-    $defaults['material_id'] = $this->_materialId;
     $defaults = array();
+    $defaults['material_id'] = $this->_materialId;
     if ($this->_action == CRM_Core_Action::UPDATE || $this->_action == CRM_Core_Action::VIEW) {
       try {
         $material = civicrm_api3('FzfdMaterial', 'getsingle', array('id' => $this->_materialId));
