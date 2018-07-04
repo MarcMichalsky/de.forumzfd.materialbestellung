@@ -62,7 +62,7 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
     $this->addMoney('price', ts('Price'), TRUE, array(), FALSE);
     $this->add('select', 'material_category_id', ts('Category'), $this->_materialCategoryList,TRUE);
     $this->addYesNo('can_be_ordered', ts('Can be ordered?'), TRUE, TRUE);
-    $this->add('text', 'creation_year', ts('Creation Year'), FALSE);
+    $this->add('text', 'creation_year', ts('Creation Year'), array(),TRUE);
     $this->add('select', 'language_id', ts('Language'), $this->_languagesList,TRUE);
     $this->add('text', 'number_of_pages', ts('Number of Pages'), FALSE);
     $this->add('text', 'download_link', ts('Download Link'), FALSE);
