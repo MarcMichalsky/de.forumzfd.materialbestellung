@@ -22,13 +22,14 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
     //readonly elements when view action
     if ($this->_action == CRM_Core_Action::VIEW) {
       $this->addViewElements();
-    } else {
+    }
+    else {
       $this->addElements();
     }
     $this->addButtons(array(
-      array('type' => 'next', 'name' => ts('Save'), 'isDefault' => true,),
-      array('type' => 'cancel', 'name' => ts('Cancel'),),));
-
+      array('type' => 'next', 'name' => ts('Save'), 'isDefault' => TRUE),
+      array('type' => 'cancel', 'name' => ts('Cancel')),
+      ));
     // export form elements
     $this->assign('elementNames', $this->getRenderableElementNames());
     parent::buildQuickForm();
@@ -42,14 +43,14 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
     $this->add('wysiwyg', 'description', ts('Description'), array(
       'readonly' => 'readonly',
       'rows' => 4,
-      'cols' => 80,)
-      , FALSE);
+      'cols' => 80,
+        ), FALSE);
     $this->addMoney('price', ts('Price'), FALSE, array('readonly' => 'readonly'), FALSE);
     $this->add('text', 'material_category_id', ts('Category'), array('readonly' => 'readonly'));
     $this->add('text', 'creation_year', ts('Creation Year'), array('readonly' => 'readonly'), FALSE);
     $this->addYesNo('can_be_ordered', ts('Can be ordered?'), FALSE, FALSE, array('readonly' => 'readonly'));
-    $this->add('text', 'language_id', ts('Language'), array('readonly' => 'readonly'),FALSE);
-    $this->add('text', 'number_of_pages', ts('Number of Pages'), array('readonly' => 'readonly'),FALSE);
+    $this->add('text', 'language_id', ts('Language'), array('readonly' => 'readonly'), FALSE);
+    $this->add('text', 'number_of_pages', ts('Number of Pages'), array('readonly' => 'readonly'), FALSE);
     $this->add('text', 'download_link', ts('Download Link'), array('readonly' => 'readonly'), FALSE);
   }
 
@@ -57,13 +58,13 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
    * Method to add form elements (for update and add)
    */
   private function addElements() {
-    $this->add('text', 'title', ts('Title'), array(),TRUE);
+    $this->add('text', 'title', ts('Title'), array(), TRUE);
     $this->add('wysiwyg', 'description', ts('Description'), array('rows' => 4, 'cols' => 80), FALSE);
     $this->addMoney('price', ts('Price'), TRUE, array(), FALSE);
-    $this->add('select', 'material_category_id', ts('Category'), $this->_materialCategoryList,TRUE);
+    $this->add('select', 'material_category_id', ts('Category'), $this->_materialCategoryList, TRUE);
     $this->addYesNo('can_be_ordered', ts('Can be ordered?'), TRUE, TRUE);
-    $this->add('text', 'creation_year', ts('Creation Year'), array(),TRUE);
-    $this->add('select', 'language_id', ts('Language'), $this->_languagesList,TRUE);
+    $this->add('text', 'creation_year', ts('Creation Year'), array(), TRUE);
+    $this->add('select', 'language_id', ts('Language'), $this->_languagesList, TRUE);
     $this->add('text', 'number_of_pages', ts('Number of Pages'), FALSE);
     $this->add('text', 'download_link', ts('Download Link'), FALSE);
   }
@@ -99,7 +100,8 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
           $defaults['language_id'] = CRM_Materialbestellung_Utils::getLanguageWithId($material['language_id']);
           $defaults['material_category_id'] = CRM_Materialbestellung_Utils::getMaterialCategoryWithId($material['material_category_id']);
         }
-      } catch (CiviCRM_API3_Exception $ex) {
+      }
+      catch (CiviCRM_API3_Exception $ex) {
       }
     }
     return $defaults;
@@ -114,7 +116,7 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
       $materialCategories = civicrm_api3('OptionValue', 'get', array(
         'option_group_id' => 'fzfd_material_category',
         'is_active' => 1,
-        'options' => array('limit' => 0,),
+        'options' => array('limit' => 0),
       ));
       foreach ($materialCategories['values'] as $materialCategory) {
         $this->_materialCategoryList[$materialCategory['value']] = $materialCategory['label'];
@@ -134,7 +136,7 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
       $languages = civicrm_api3('OptionValue', 'get', array(
         'option_group_id' => 'languages',
         'is_active' => 1,
-        'options' => array('limit' => 0,),
+        'options' => array('limit' => 0),
       ));
       foreach ($languages['values'] as $language) {
         $this->_languagesList[$language['name']] = $language['label'];
@@ -152,40 +154,43 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
     switch ($this->_action) {
       case CRM_Core_Action::DELETE:
         $this->deleteMaterialById();
-        CRM_Core_Session::setStatus(' Material in database '.ts('deleted'), ' Material '.ts('deleted'), 'success');
-        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', true));
+        CRM_Core_Session::setStatus(' Material in database ' . ts('deleted'), ' Material ' . ts('deleted'), 'success');
+        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', TRUE));
         break;
+
       case CRM_Core_Action::DISABLE:
         $this->disableMaterialById();
-        CRM_Core_Session::setStatus(' Material in database '.ts('disabled'), ' Material '.ts('disabled'), 'success');
-        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', true));
+        CRM_Core_Session::setStatus(' Material in database ' . ts('disabled'), ' Material ' . ts('disabled'), 'success');
+        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', TRUE));
         break;
+
       case CRM_Core_Action::ENABLE:
         $this->enableMaterialById();
-        CRM_Core_Session::setStatus(' Material in database '.ts('enabled'), ' Material '.ts('enabled'), 'success');
-        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', true));
+        CRM_Core_Session::setStatus(' Material in database ' . ts('enabled'), ' Material ' . ts('enabled'), 'success');
+        CRM_Core_Session::singleton()->pushUserContext(CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', TRUE));
         break;
-        default:
-          $values = $this->exportValues();
-          $ignores = array('entryURL', 'qfKey');
-          foreach ($values as $key => $data) {
-            if (substr($key, 0, 1) != "_" && !in_array($key, $ignores)) {
-              $params[$key] = $data;
-            }
+
+      default:
+        $values = $this->exportValues();
+        $ignores = array('entryURL', 'qfKey');
+        foreach ($values as $key => $data) {
+          if (substr($key, 0, 1) != "_" && !in_array($key, $ignores)) {
+            $params[$key] = $data;
           }
-          if ($this->_action != CRM_Core_Action::ADD) {
-            $params['id'] = $this->_materialId;
-          }
-          try {
-            civicrm_api3('FzfdMaterial', 'create', $params);
-            CRM_Core_Session::setStatus(' Material in database '.ts('saved'), ' Material '.ts('Saved'), 'success');
-          }
-          catch (CiviCRM_API3_Exception $ex) {
-            CRM_Core_Session::setStatus(ts('Error saving').' Material in database', ts('NOT Saved').' Material', 'error');
-            CRM_Core_Error::debug_log_message('Could not save material in '.__METHOD__.'error from API FzfdMaterial create: '.$ex->getMessage());
-          }
-          parent::postProcess();
-          break;
+        }
+        if ($this->_action != CRM_Core_Action::ADD) {
+          $params['id'] = $this->_materialId;
+        }
+        try {
+          civicrm_api3('FzfdMaterial', 'create', $params);
+          CRM_Core_Session::setStatus(' Material in database ' . ts('saved'), ' Material ' . ts('Saved'), 'success');
+        }
+        catch (CiviCRM_API3_Exception $ex) {
+          CRM_Core_Session::setStatus(ts('Error saving') . ' Material in database', ts('NOT Saved') . ' Material', 'error');
+          CRM_Core_Error::debug_log_message('Could not save material in ' . __METHOD__ . 'error from API FzfdMaterial create: ' . $ex->getMessage());
+        }
+        parent::postProcess();
+        break;
     }
   }
 
@@ -284,11 +289,11 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
    */
   private function deleteMaterialById() {
     try {
-      civicrm_api3('FzfdMaterial', 'delete', array('id' => $this->_materialId,));
-      CRM_Core_Session::setStatus(ts('Deleted Material with id '.$this->_materialId,'Material deleted', 'success'));
+      civicrm_api3('FzfdMaterial', 'delete', array('id' => $this->_materialId));
+      CRM_Core_Session::setStatus(ts('Deleted Material with id ' . $this->_materialId, 'Material deleted', 'success'));
     }
     catch (CiviCRM_API3_Exception $ex) {
-      CRM_Core_Session::setStatus(ts('Could not delete Material with id '.$this->_materialId,'Material NOT deleted', 'error'));
+      CRM_Core_Session::setStatus(ts('Could not delete Material with id ' . $this->_materialId, 'Material NOT deleted', 'error'));
     }
     // todo redirect in new 4.7 compliant way!
     CRM_Utils_System::civiExit();
@@ -322,4 +327,5 @@ class CRM_Materialbestellung_Form_Material extends CRM_Core_Form {
     catch (CiviCRM_API3_Exception $ex) {
     }
   }
+
 }

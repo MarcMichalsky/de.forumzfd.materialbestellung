@@ -13,6 +13,7 @@ class CRM_Materialbestellung_Upgrader extends CRM_Materialbestellung_Upgrader_Ba
    */
   public function install() {
     $this->executeSqlFile('sql/createMaterialTable.sql');
+    $this->executeCustomDataFile('xml/Rechnungsadresse.xml');
   }
 
   /**
@@ -40,17 +41,27 @@ class CRM_Materialbestellung_Upgrader extends CRM_Materialbestellung_Upgrader_Ba
     // add column can_be_ordered if required
     $tableName = 'forumzfd_material';
     if (!CRM_Core_DAO::checkFieldExists($tableName, 'can_be_ordered')) {
-      $addQuery = 'ALTER TABLE '.$tableName.' ADD can_be_ordered TINYINT(3) UNSIGNED DEFAULT 0';
+      $addQuery = 'ALTER TABLE ' . $tableName . ' ADD can_be_ordered TINYINT(3) UNSIGNED DEFAULT 0';
       CRM_Core_DAO::executeQuery($addQuery);
     }
     // remove subtitle and short_description
     if (CRM_Core_DAO::checkFieldExists($tableName, 'subtitle')) {
-      $removeQuery = 'ALTER TABLE '.$tableName.' DROP COLUMN subtitle';
+      $removeQuery = 'ALTER TABLE ' . $tableName . ' DROP COLUMN subtitle';
       CRM_Core_DAO::executeQuery($removeQuery);
     }
     if (CRM_Core_DAO::checkFieldExists($tableName, 'short_description')) {
-      $removeQuery = 'ALTER TABLE '.$tableName.' DROP COLUMN short_description';
+      $removeQuery = 'ALTER TABLE ' . $tableName . ' DROP COLUMN short_description';
       CRM_Core_DAO::executeQuery($removeQuery);
+    }
+    return TRUE;
+  }
+
+  /**
+   * Add custom group for rechnungsadresse if not exists
+   */
+  public function upgrade_1020() {
+    if (!CRM_Core_DAO::checkTableExists('civicrm_value_rechnungsadresse_material_bestellung')) {
+      $this->executeCustomDataFile('xml/Rechnungsadresse.xml');
     }
     return TRUE;
   }

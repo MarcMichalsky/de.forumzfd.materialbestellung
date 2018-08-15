@@ -14,6 +14,7 @@ class CRM_Materialbestellung_Page_MaterialActions extends CRM_Core_Page {
         ));
         CRM_Core_Session::setStatus(ts('Material successfully disabled'), ts('Material Disabled'), 'success');
         break;
+
       case "enable":
         civicrm_api3('FzfdMaterial', 'create', array(
           'id' => $materialId,
@@ -22,7 +23,8 @@ class CRM_Materialbestellung_Page_MaterialActions extends CRM_Core_Page {
         CRM_Core_Session::setStatus(ts('Material successfully enabled'), ts('Material Enabled'), 'success');
         break;
     }
-    $contextUrl = CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', '&reset=1&action=browse', true);
+    $contextUrl = CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', '&reset=1&action=browse', TRUE);
     CRM_Utils_System::redirect($contextUrl);
   }
+
 }

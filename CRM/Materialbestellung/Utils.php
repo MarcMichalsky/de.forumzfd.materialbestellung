@@ -18,11 +18,11 @@ class CRM_Materialbestellung_Utils {
   private static function getResourcesPath() {
     // Get the directory of the extension based on the name.
     $container = CRM_Extension_System::singleton()->getFullContainer();
-    $resourcesPath = $container->getPath('de.forumzfd.materialbestellung').'/resources/';
+    $resourcesPath = $container->getPath('de.forumzfd.materialbestellung') . '/resources/';
     if (!is_dir($resourcesPath) || !file_exists($resourcesPath)) {
-      throw new Exception(ts(ts('Could not find the folder ').$resourcesPath
-        .ts(' which is required for extension de.forumzfd.materialbestellung in ').__METHOD__
-        .ts('.It does not exist or is not a folder, contact your system administrator')));
+      throw new Exception(ts('Could not find the folder ') . $resourcesPath
+        . ts(' which is required for extension de.forumzfd.materialbestellung in ') . __METHOD__
+        . ts('.It does not exist or is not a folder, contact your system administrator'));
     }
     return $resourcesPath;
   }
@@ -34,17 +34,18 @@ class CRM_Materialbestellung_Utils {
    */
   public static function createActivityTypesFromJson() {
     $resourcesPath = self::getResourcesPath();
-    $jsonFile = $resourcesPath.'activity_types.json';
+    $jsonFile = $resourcesPath . 'activity_types.json';
     if (!file_exists($jsonFile)) {
-      throw new Exception(ts(ts('Could not load activity_types configuration file for extension in ').__METHOD__
-        .ts(', contact your system administrator!')));
+      throw new Exception(ts('Could not load activity_types configuration file for extension in ') . __METHOD__
+        . ts(', contact your system administrator!'));
     }
     $activityTypesJson = file_get_contents($jsonFile);
-    $activityTypes = json_decode($activityTypesJson, true);
+    $activityTypes = json_decode($activityTypesJson, TRUE);
     foreach ($activityTypes as $name => $activityTypeParams) {
       if (!self::activityTypeExists($activityTypeParams['name'])) {
         self::createActivityType($activityTypeParams);
-      } else {
+      }
+      else {
         // make sure they are active!
         $activityTypeOptionGroupId = civicrm_api3('OptionGroup', 'getvalue', array(
           'name' => 'activity_type',
@@ -54,12 +55,13 @@ class CRM_Materialbestellung_Utils {
           if ($activityTypeOptionGroupId) {
             $query = "UPDATE civicrm_option_value SET is_active = %1 WHERE option_group_id = %2 AND NAME = %3";
             CRM_Core_DAO::executeQuery($query, array(
-              1 => array(1, 'Integer',),
+              1 => array(1, 'Integer'),
               2 => array($activityTypeOptionGroupId, 'Integer'),
               3 => array($name, 'String'),
             ));
           }
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
         }
       }
     }
@@ -72,10 +74,10 @@ class CRM_Materialbestellung_Utils {
    */
   public static function disableActivityTypesFromJson() {
     $resourcesPath = self::getResourcesPath();
-    $jsonFile = $resourcesPath.'activity_types.json';
+    $jsonFile = $resourcesPath . 'activity_types.json';
     if (file_exists($jsonFile)) {
       $activityTypesJson = file_get_contents($jsonFile);
-      $activityTypes = json_decode($activityTypesJson, true);
+      $activityTypes = json_decode($activityTypesJson, TRUE);
       foreach ($activityTypes as $name => $activityTypeParams) {
         if (self::activityTypeExists($name)) {
           $activityTypeOptionGroupId = civicrm_api3('OptionGroup', 'getvalue', array(
@@ -86,12 +88,13 @@ class CRM_Materialbestellung_Utils {
             if ($activityTypeOptionGroupId) {
               $query = "UPDATE civicrm_option_value SET is_active = %1 WHERE option_group_id = %2 AND NAME = %3";
               CRM_Core_DAO::executeQuery($query, array(
-                1 => array(0, 'Integer',),
+                1 => array(0, 'Integer'),
                 2 => array($activityTypeOptionGroupId, 'Integer'),
                 3 => array($name, 'String'),
               ));
             }
-          } catch (Exception $ex) {
+          }
+          catch (Exception $ex) {
           }
         }
       }
@@ -105,19 +108,20 @@ class CRM_Materialbestellung_Utils {
    */
   public static function disableOptionGroupsFromJson() {
     $resourcesPath = self::getResourcesPath();
-    $jsonFile = $resourcesPath.'option_groups.json';
+    $jsonFile = $resourcesPath . 'option_groups.json';
     if (file_exists($jsonFile)) {
       $optionGroupsJson = file_get_contents($jsonFile);
-      $optionGroups = json_decode($optionGroupsJson, true);
+      $optionGroups = json_decode($optionGroupsJson, TRUE);
       foreach ($optionGroups as $name => $optionGroupParams) {
         if (self::activityTypeExists($name)) {
           try {
             $query = "UPDATE civicrm_option_group SET is_active = %1 WHERE name = %2";
             CRM_Core_DAO::executeQuery($query, array(
-              1 => array(0, 'Integer',),
+              1 => array(0, 'Integer'),
               2 => array($name, 'String'),
             ));
-          } catch (Exception $ex) {
+          }
+          catch (Exception $ex) {
           }
         }
       }
@@ -131,25 +135,27 @@ class CRM_Materialbestellung_Utils {
    */
   public static function createOptionGroupsFromJson() {
     $resourcesPath = self::getResourcesPath();
-    $jsonFile = $resourcesPath.'option_groups.json';
+    $jsonFile = $resourcesPath . 'option_groups.json';
     if (!file_exists($jsonFile)) {
-      throw new Exception(ts(ts('Could not load option_groups configuration file for extension in ').__METHOD__
-        .ts(', contact your system administrator!')));
+      throw new Exception(ts('Could not load option_groups configuration file for extension in ') . __METHOD__
+        . ts(', contact your system administrator!'));
     }
     $optionGroupsJson = file_get_contents($jsonFile);
-    $optionGroups = json_decode($optionGroupsJson, true);
+    $optionGroups = json_decode($optionGroupsJson, TRUE);
     foreach ($optionGroups as $name => $optionGroupParams) {
       if (!self::optionGroupExists($optionGroupParams['name'])) {
         self::createOptionGroup($optionGroupParams);
-      } else {
+      }
+      else {
         // make sure they are active!
         try {
           $query = "UPDATE civicrm_option_group SET is_active = %1 WHERE name = %2";
           CRM_Core_DAO::executeQuery($query, array(
-            1 => array(1, 'Integer',),
+            1 => array(1, 'Integer'),
             2 => array($name, 'String'),
           ));
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
         }
 
       }
@@ -164,8 +170,8 @@ class CRM_Materialbestellung_Utils {
    */
   public static function createOptionGroup($params) {
     if (!isset($params['name']) || empty($params['name'])) {
-      throw new Exception(ts('Could not create option group in ').__METHOD__
-        .ts(', parameters do not contain mandatory element name or name is empty. Contact your system administrator'));
+      throw new Exception(ts('Could not create option group in ') . __METHOD__
+        . ts(', parameters do not contain mandatory element name or name is empty. Contact your system administrator'));
     }
     if (!isset($params['is_active'])) {
       $params['is_active'] = 1;
@@ -185,9 +191,10 @@ class CRM_Materialbestellung_Utils {
       if (isset($optionValues) && !empty($optionValues)) {
         self::addOptionValues($optionGroup['id'], $optionValues);
       }
-    } catch (CiviCRM_API3_Exception $ex) {
+    }
+    catch (CiviCRM_API3_Exception $ex) {
       throw new Exception(ts('Could not create or update option_group with name')
-          .$params['name'].' in '.__METHOD__.ts(', error from API OptionGroup Create: ') . $ex->getMessage());
+          . $params['name'] . ' in ' . __METHOD__ . ts(', error from API OptionGroup Create: ') . $ex->getMessage());
     }
   }
 
@@ -209,7 +216,8 @@ class CRM_Materialbestellung_Utils {
         }
         try {
           civicrm_api3('OptionValue', 'Create', $optionValueParams);
-        } catch (CiviCRM_API3_Exception $ex) {
+        }
+        catch (CiviCRM_API3_Exception $ex) {
         }
       }
     }
@@ -228,7 +236,8 @@ class CRM_Materialbestellung_Utils {
       ));
       if ($count == 1) {
         return TRUE;
-      } else {
+      }
+      else {
         return FALSE;
       }
     }
@@ -246,8 +255,8 @@ class CRM_Materialbestellung_Utils {
    */
   public static function createActivityType($params) {
     if (!isset($params['name']) || empty($params['name'])) {
-      throw new Exception(ts('Could not create activity type in ').__METHOD__
-        .ts(', parameters do not contain mandatory element name or name is empty. Contact your system administrator'));
+      throw new Exception(ts('Could not create activity type in ') . __METHOD__
+        . ts(', parameters do not contain mandatory element name or name is empty. Contact your system administrator'));
     }
     $params['option_group_id'] = 'activity_type';
     if (!isset($params['is_active'])) {
@@ -258,9 +267,10 @@ class CRM_Materialbestellung_Utils {
     }
     try {
       return civicrm_api3('OptionValue', 'Create', $params);
-    } catch (CiviCRM_API3_Exception $ex) {
-      throw new Exception(ts('Could not create activity type with name ').$params['name'].' in '.__METHOD__
-          .ts(' error from API OptionValue Create: ').$ex->getMessage());
+    }
+    catch (CiviCRM_API3_Exception $ex) {
+      throw new Exception(ts('Could not create activity type with name ') . $params['name'] . ' in '
+        . __METHOD__ . ts(' error from API OptionValue Create: ') . $ex->getMessage());
     }
   }
 
@@ -278,7 +288,8 @@ class CRM_Materialbestellung_Utils {
       ));
       if ($count == 1) {
         return TRUE;
-      } else {
+      }
+      else {
         return FALSE;
       }
     }
@@ -300,13 +311,14 @@ class CRM_Materialbestellung_Utils {
           'option_group_id' => 'fzfd_material_category',
           'is_active' => 1,
           'value' => $materialCategoryId,
-          'return' => 'label'
+          'return' => 'label',
         ));
       }
       catch (CiviCRM_API3_Exception $ex) {
         return FALSE;
       }
-    } else {
+    }
+    else {
       return FALSE;
     }
   }
@@ -324,13 +336,14 @@ class CRM_Materialbestellung_Utils {
           'option_group_id' => 'languages',
           'is_active' => 1,
           'name' => $languageId,
-          'return' => 'label'
+          'return' => 'label',
         ));
       }
       catch (CiviCRM_API3_Exception $ex) {
         return FALSE;
       }
-    } else {
+    }
+    else {
       return FALSE;
     }
   }

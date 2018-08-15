@@ -15,12 +15,14 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
    * @var array
    * @static
    */
-  static $_fields = null;
-  static $_export = null;
+  static $_fields = NULL;
+  static $_export = NULL;
+  static $_fieldKeys = NULL;
+
   /**
    * empty definition for virtual function
    */
-  static function getTableName() {
+  public static function getTableName() {
     return 'forumzfd_material';
   }
   /**
@@ -29,13 +31,13 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
    * @access public
    * @return array
    */
-  static function &fields() {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = array(
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true
+          'required' => TRUE,
         ) ,
         'title' => array(
           'name' => 'title',
@@ -77,7 +79,6 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
           'name' => 'download_link',
           'type' => CRM_Utils_Type::T_STRING,
         ),
-
       );
     }
     return self::$_fields;
@@ -89,7 +90,7 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
    * @access public
    * @return array
    */
-  static function &fieldKeys() {
+  public static function &fieldKeys() {
     if (!(self::$_fieldKeys)) {
       self::$_fieldKeys = array(
         'id' => 'id',
@@ -114,16 +115,16 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
    * return array
    * @static
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = array();
       $fields = self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['activity'] = & $fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = & $fields[$name];
           }
         }
@@ -131,4 +132,5 @@ class CRM_Materialbestellung_DAO_Material extends CRM_Core_DAO {
     }
     return self::$_export;
   }
+
 }

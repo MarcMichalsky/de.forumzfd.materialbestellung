@@ -41,13 +41,13 @@ class CRM_Materialbestellung_Page_Material extends CRM_Core_Page_Basic {
           'name' => ts('View'),
           'url' => 'civicrm/fzfdmaterial/form/material',
           'qs' => 'action=view&mid=%%id%%&reset=1',
-          'title' => ts('View').' Material',
+          'title' => ts('View') . ' Material',
         ),
         CRM_Core_Action::UPDATE => array(
           'name' => ts('Edit'),
           'url' => 'civicrm/fzfdmaterial/form/material',
           'qs' => 'action=update&mid=%%id%%&reset=1',
-          'title' => ts('Edit').' Material',
+          'title' => ts('Edit') . ' Material',
         ),
         CRM_Core_Action::DISABLE => array(
           'name' => ts('Disable'),
@@ -97,7 +97,7 @@ class CRM_Materialbestellung_Page_Material extends CRM_Core_Page_Basic {
    *   user context.
    */
   public function userContext($mode = NULL) {
-    return CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', true);
+    return CRM_Utils_System::url('civicrm/fzfdmaterial/page/material', 'reset=1&action=browse', TRUE);
   }
 
 }

@@ -13,7 +13,7 @@ function _civicrm_api3_fzfd_material_Delete_spec(&$spec) {
     'name' => 'id',
     'title' => 'id',
     'api.required' => 1,
-    'type' => CRM_Utils_Type::T_INT
+    'type' => CRM_Utils_Type::T_INT,
   );
 }
 

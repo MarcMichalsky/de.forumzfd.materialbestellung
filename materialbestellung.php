@@ -3,7 +3,7 @@
 require_once 'materialbestellung.civix.php';
 
 /**
- * Implements hook_civicrm_navigationMenu
+ * Implements hook_civicrm_navigationMenu().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
  */
@@ -153,7 +153,8 @@ function _materialbestellung_required_extensions_installed() {
     'de.forumzfd.apiprocessing' => FALSE,
   );
   $installedExtensions = civicrm_api3('Extension', 'get', array(
-    'option' => array('limit' => 0,),));
+    'option' => array('limit' => 0),
+    ));
   foreach ($installedExtensions['values'] as $installedExtension) {
     if (isset($required[$installedExtension['key']]) && $installedExtension['status'] == 'installed') {
       $required[$installedExtension['key']] = TRUE;
@@ -161,7 +162,7 @@ function _materialbestellung_required_extensions_installed() {
   }
   foreach ($required as $requiredExtension => $installed) {
     if (!$installed) {
-      throw new Exception('Required extension '.$requiredExtension.' is not installed, can not install or enable 
+      throw new Exception('Required extension ' . $requiredExtension . ' is not installed, can not install or enable 
       de.forumzfd.materialbestellung. Please install the extension and then retry installing or enabling 
       de.forumzfd.materialbestellung');
     }

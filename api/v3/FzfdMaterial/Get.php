@@ -12,12 +12,12 @@ function _civicrm_api3_fzfd_material_Get_spec(&$spec) {
   $spec['id'] = array(
     'name' => 'id',
     'title' => 'id',
-    'type' => CRM_Utils_Type::T_INT
+    'type' => CRM_Utils_Type::T_INT,
   );
   $spec['title'] = array(
     'name' => 'title',
     'title' => 'title',
-    'type' => CRM_Utils_Type::T_STRING
+    'type' => CRM_Utils_Type::T_STRING,
   );
   $spec['description'] = array(
     'name' => 'description',
