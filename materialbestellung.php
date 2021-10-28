@@ -8,15 +8,26 @@ require_once 'materialbestellung.civix.php';
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
  */
 function materialbestellung_civicrm_navigationMenu(&$menu) {
-  CRM_Materialbestellung_Utils::insertNavigationMenu($menu, "Administer", array(
-    'label' => ts('ForumZFD Material'),
+  CRM_Materialbestellung_Utils::insertNavigationMenu($menu, "", array(
+    'label' => ts('Material'),
     'name' => 'fzfd_material',
     'url' => 'civicrm/fzfdmaterial/page/material?reset=1&action=browse',
-    'permission' => 'administer CiviCRM',
+    'permission' => 'access materialbestellung',
     'operator' => 'AND',
+    'icon' => 'fa fa-cube',
     'separator' => 0,
   ));
   _materialbestellung_civix_navigationMenu($menu);
+}
+
+/**
+ * Add custom permissions
+ */
+function materialbestellung_civicrm_permission(&$permissions) {
+  $permissions['access materialbestellung'] = [
+    'Materialbestellung: access Materialbestellung',
+    'Grants the necessary permissions to manage Materialbestellungen',
+  ];
 }
 
 /**
