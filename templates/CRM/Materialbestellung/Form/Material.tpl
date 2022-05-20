@@ -17,7 +17,7 @@
   {/foreach}
 
   {* FOOTER *}
-  <div class="crm-submit-buttons">
+  <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
   {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
 </div>
