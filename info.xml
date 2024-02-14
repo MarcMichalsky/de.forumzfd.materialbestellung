@@ -21,6 +21,9 @@
     <ver>4.7</ver>
   </compatibility>
   <comments>Extension is being tested</comments>
+  <requires>
+    <ext>de.forumzfd.apiprocessing</ext>
+  </requires>
   <civix>
     <namespace>CRM/Materialbestellung</namespace>
     <format>22.10.0</format>
