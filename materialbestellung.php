@@ -107,7 +107,7 @@ function _materialbestellung_required_extensions_installed() {
     'de.forumzfd.apiprocessing' => FALSE,
   );
   $installedExtensions = civicrm_api3('Extension', 'get', array(
-    'option' => array('limit' => 0),
+    'options' => array('limit' => 0),
     ));
   foreach ($installedExtensions['values'] as $installedExtension) {
     if (isset($required[$installedExtension['key']]) && $installedExtension['status'] == 'installed') {
