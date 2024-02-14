@@ -23,5 +23,12 @@
   <comments>Extension is being tested</comments>
   <civix>
     <namespace>CRM/Materialbestellung</namespace>
+    <format>22.10.0</format>
   </civix>
+  <mixins>
+    <mixin>menu-xml@1.0.0</mixin>
+  </mixins>
+  <classloader>
+    <psr0 prefix="CRM_" path="."/>
+  </classloader>
 </extension>
