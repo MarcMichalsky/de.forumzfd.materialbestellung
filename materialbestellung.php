@@ -1,5 +1,7 @@
 <?php
 
+use CRM_Materialbestellung_ExtensionUtil as E;
+
 require_once 'materialbestellung.civix.php';
 
 /**
@@ -25,8 +27,8 @@ function materialbestellung_civicrm_navigationMenu(&$menu) {
  */
 function materialbestellung_civicrm_permission(&$permissions) {
   $permissions['access materialbestellung'] = [
-    'Materialbestellung: access Materialbestellung',
-    'Grants the necessary permissions to manage Materialbestellungen',
+    'label' => E::ts('Materialbestellung: access Materialbestellung'),
+    'description' => E::ts('Grants the necessary permissions to manage Materialbestellungen'),
   ];
 }
 
