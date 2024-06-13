@@ -45,8 +45,6 @@ function materialbestellung_civicrm_config(&$config) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
 function materialbestellung_civicrm_install() {
-  // check if required extensions are installed
-  _materialbestellung_required_extensions_installed();
   _materialbestellung_civix_civicrm_install();
 }
 
@@ -56,35 +54,7 @@ function materialbestellung_civicrm_install() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
 function materialbestellung_civicrm_enable() {
-  // check if required extensions are installed
-  _materialbestellung_required_extensions_installed();
   _materialbestellung_civix_civicrm_enable();
-}
-
-/**
- * Function to check if the required extensions are installed
- *
- * @throws Exception
- */
-function _materialbestellung_required_extensions_installed() {
-  $required = array(
-    'de.forumzfd.apiprocessing' => FALSE,
-  );
-  $installedExtensions = civicrm_api3('Extension', 'get', array(
-    'options' => array('limit' => 0),
-    ));
-  foreach ($installedExtensions['values'] as $installedExtension) {
-    if (isset($required[$installedExtension['key']]) && $installedExtension['status'] == 'installed') {
-      $required[$installedExtension['key']] = TRUE;
-    }
-  }
-  foreach ($required as $requiredExtension => $installed) {
-    if (!$installed) {
-      throw new Exception('Required extension ' . $requiredExtension . ' is not installed, can not install or enable
-      de.forumzfd.materialbestellung. Please install the extension and then retry installing or enabling
-      de.forumzfd.materialbestellung');
-    }
-  }
 }
 
 // --- Functions below this ship commented out. Uncomment as required. ---
