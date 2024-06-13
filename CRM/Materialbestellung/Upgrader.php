@@ -13,7 +13,6 @@ class CRM_Materialbestellung_Upgrader extends CRM_Extension_Upgrader_Base {
    */
   public function install() {
     $this->executeSqlFile('sql/createMaterialTable.sql');
-    $this->executeCustomDataFile('xml/Rechnungsadresse.xml');
   }
 
   /**
@@ -61,7 +60,17 @@ class CRM_Materialbestellung_Upgrader extends CRM_Extension_Upgrader_Base {
    */
   public function upgrade_1020() {
     if (!CRM_Core_DAO::checkTableExists('civicrm_value_rechnungsadresse_material_bestellung')) {
-      $this->executeCustomDataFile('xml/Rechnungsadresse.xml');
+      try {
+        $this->executeCustomDataFile('xml/Rechnungsadresse.xml');
+      }
+      catch (Exception $e) {
+        if ($e instanceof PEAR_Exception && $e->getMessage() == 'DB Error: already exists') {
+          $this->ctx->log->info('Some fields already exist, skipping installation of xml/Rechnungsadresse.xml');;
+        }
+        else {
+          throw $e;
+        }
+      }
     }
     return TRUE;
   }
