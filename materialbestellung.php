@@ -51,24 +51,6 @@ function materialbestellung_civicrm_install() {
 }
 
 /**
- * Implements hook_civicrm_postInstall().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postInstall
- */
-function materialbestellung_civicrm_postInstall() {
-  _materialbestellung_civix_civicrm_postInstall();
-}
-
-/**
- * Implements hook_civicrm_uninstall().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
- */
-function materialbestellung_civicrm_uninstall() {
-  _materialbestellung_civix_civicrm_uninstall();
-}
-
-/**
  * Implements hook_civicrm_enable().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
@@ -77,24 +59,6 @@ function materialbestellung_civicrm_enable() {
   // check if required extensions are installed
   _materialbestellung_required_extensions_installed();
   _materialbestellung_civix_civicrm_enable();
-}
-
-/**
- * Implements hook_civicrm_disable().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
- */
-function materialbestellung_civicrm_disable() {
-  _materialbestellung_civix_civicrm_disable();
-}
-
-/**
- * Implements hook_civicrm_upgrade().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
- */
-function materialbestellung_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _materialbestellung_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
@@ -116,8 +80,8 @@ function _materialbestellung_required_extensions_installed() {
   }
   foreach ($required as $requiredExtension => $installed) {
     if (!$installed) {
-      throw new Exception('Required extension ' . $requiredExtension . ' is not installed, can not install or enable 
-      de.forumzfd.materialbestellung. Please install the extension and then retry installing or enabling 
+      throw new Exception('Required extension ' . $requiredExtension . ' is not installed, can not install or enable
+      de.forumzfd.materialbestellung. Please install the extension and then retry installing or enabling
       de.forumzfd.materialbestellung');
     }
   }
@@ -149,12 +113,3 @@ function materialbestellung_civicrm_navigationMenu(&$menu) {
   ));
   _materialbestellung_civix_navigationMenu($menu);
 } // */
-
-/**
- * Implements hook_civicrm_entityTypes().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
- */
-function materialbestellung_civicrm_entityTypes(&$entityTypes) {
-  _materialbestellung_civix_civicrm_entityTypes($entityTypes);
-}
